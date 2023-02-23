@@ -1,0 +1,62 @@
+#!/usr/bin/env -S fish -N
+
+function build
+  set -l command docker
+
+  if type -q buildah
+    set command "buildah"
+  end
+
+  if test -n "$BUILDER"
+    and type -q $BUILDER
+      set command $BUILDER
+  end
+
+  echo $command
+end
+#!/usr/bin/env -S fish -N
+
+function run
+  set -l command docker
+
+  if type -q podman
+    set command "podman"
+  end
+
+  if test -n "$RUNNER"
+    and type -q $RUNNER
+      set command $RUNNER
+  end
+
+  echo $command
+end
+
+
+set -l arg $argv[1]
+
+if test -n "$arg"
+  set -l image_name $IMAGE
+
+  if test -z "$image_name"
+    echo "Image name wasn't set. Set by environment variable IMAGE"
+  end
+
+  if [ $argv[1] = "build" ]
+    and test -n "$image_name"
+      set -l builder (build)
+      eval "$builder build -t $image_name ."
+  end
+
+  if [ $argv[1] = "run" ]
+    and test -n "$image_name"
+      set -l builder (run)
+      eval "$runner build -t homepage ."
+  end
+
+else
+  set -l builder (build)
+  set -l runner (run)
+  echo "builder: \"$builder\""
+  echo "runner: \"$runner\""
+  echo "Set BUILDER and RUNNER environment varialbes respectively to override"
+end
