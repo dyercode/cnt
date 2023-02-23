@@ -8,12 +8,23 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
+      let pkgs = import nixpkgs { inherit system; };
       in {
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
-            fish
-          ];
+        defaultPackage = pkgs.stdenv.mkDerivation {
+          name = "cnt";
+          src = self;
+          buildPhase = "";
+          installPhase = "mkdir -p $out/bin; install -t $out/bin cnt";
+
+          meta = {
+            description = "wrapper to build/run containers";
+            homepage = "https://github.com/dyercode/cnt";
+            licence = pkgs.lib.licenses.gpl3;
+            maintainers = [ ];
+          };
         };
+
+        devShells.default =
+          pkgs.mkShell { nativeBuildInputs = with pkgs; [ fish ]; };
       });
 }

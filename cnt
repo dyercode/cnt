@@ -1,4 +1,4 @@
-#!/usr/bin/env -S fish -N
+#!/usr/bin/env fish
 
 function build
   set -l command docker
