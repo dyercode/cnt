@@ -50,7 +50,7 @@ if test -n "$arg"
   if [ $argv[1] = "run" ]
     and test -n "$image_name"
       set -l runner (run)
-      eval "$runner run -p 8080:80 -t $image_name ."
+      eval "$runner run -d -p 8080:80 -t $image_name"
   end
 
 else
