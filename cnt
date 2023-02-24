@@ -37,6 +37,12 @@ set -l arg $argv[1]
 if test -n "$arg"
   set -l image_name $IMAGE
 
+  set -l image_cmd $argv[2]
+
+  if test -n "$image_cmd"
+    set image_name $image_cmd
+  end
+
   if test -z "$image_name"
     echo "Image name wasn't set. Set by environment variable IMAGE"
   end
